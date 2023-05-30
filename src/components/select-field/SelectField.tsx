@@ -39,8 +39,8 @@ export const SelectField: React.FC <SelectFieldprops> = ({
                 value={value}
                 onChange={handleChange}
                 variant="standard"
-                FormHelperTextProps={{sx: {color: '#4a4a4a'}}}
-                InputProps={{sx: {color: '#240202', fontWeight: 600}}}
+                FormHelperTextProps={{sx: {color: 'rgb(231 199 199)'}}}
+                InputProps={{sx: {color: '#FFFFFF', fontWeight: 600}}}
                 sx={{color: '#FFF'}}
                 SelectProps = {{
                     MenuProps: {

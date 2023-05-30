@@ -7,21 +7,24 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Badge from '@mui/material/Badge';
 
 // Constants
 import { constants } from '../../constants/constants';
 
 // Models
 interface BrandBarProps {
-    dark: boolean;
+    metric: boolean;
     toggleHandler: ()=> void;
+    weather: string;
 }
 
 
 
 export const BrandBar: React.FC<BrandBarProps> = ({
-    dark,
+    metric,
     toggleHandler,
+    weather,
 })=> {
 
     // Renderer
@@ -42,7 +45,7 @@ export const BrandBar: React.FC<BrandBarProps> = ({
                             sx={{ 
                                 flexGrow: 1, 
                                 textAlign: 'left', 
-                                color: dark? '#f5f5f5': '#8134DF', 
+                                color: '#FEFEFE', 
                                 fontSize: '32px' 
                             }}
                         >
@@ -51,14 +54,35 @@ export const BrandBar: React.FC<BrandBarProps> = ({
                         <FormControlLabel 
                             control={
                                 <Switch
-                                    checked={dark}
+                                    checked={metric}
                                     onChange={toggleHandler}
                                     color='secondary'
                                 />
                             } 
-                            label={<Typography sx={{color: '#FFF'}}>{dark? 'Dark': 'Light'}</Typography>}
+                            label={
+                                weather.length === 0?
+                                    <Typography sx={{color: '#FFF'}}>
+                                        {metric? 'Metric': 'Imperial'}
+                                    </Typography>
+                                    :
+                                    <Badge 
+                                        badgeContent={
+                                            <img 
+                                                src={`https://openweathermap.org/img/wn/${weather}.png`}
+                                                width={'16px'}
+                                                height={'16px'}
+                                            />
+                                        } 
+                                        color="info"
+                                    >
+                                        <Box sx={{pr: '16px'}}>
+                                            <Typography sx={{color: '#FFF'}}>
+                                                {metric? 'Metric': 'Imperial'}
+                                            </Typography>
+                                        </Box>                                        
+                                    </Badge>
+                            }
                         />
-                        
                     </Toolbar>
                 </AppBar>
             </Box>

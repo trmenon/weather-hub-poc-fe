@@ -1,10 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import {
-    OptionProps, 
-    CityWeatherProps,
-    CountryInformationProps,
-} from '../types/types';
+import { OptionProps,CityWeatherProps,} from '../types/types';
 
 // Services Imports
 import { 
@@ -15,8 +11,8 @@ import {
 } from '../services/services';
 
 // Import Assets
-import day_sky from '../assets/day_sky.png';
-import night_sky from '../assets/night_sky.png';
+import weather_background from '../assets/weather_backround.jpg';
+import weatherBG from '../assets/WeatherBG.png'
 
 // Legacy Imports
 import Box from '@mui/material/Box';
@@ -29,7 +25,7 @@ import { WeatherCard } from '../components/weather-card/WeatherCard';
 
 // Constnats
 import { constants } from '../constants/constants';
-const weather_default = {
+const weather_default: CityWeatherProps = {
     temperature_feels_like: 0,
     temperature_current: 0,
     temperature_max: 0,
@@ -40,23 +36,16 @@ const weather_default = {
     wind_degree: 0,
     wind_gust: 0,
     wind_speed: 0,
-}
-
-const country_information_default = {
-    name: '',
-    iso2: '',
-    capital: '',
-    currency: '',
+    weatherIcon: '',
 }
 
 export const WeatherAppController = ()=> {
     // States
-    const [dark, setDark] = useState(false);
+    const [metric, setMetric] = useState(false);
     const [countries, setCountries] = useState<OptionProps[]>([]);
     const [provinces, setProvinces] = useState<OptionProps[]>([]);
     const [cities, setCities] = useState<OptionProps[]>([]);
     const [selectedCountry, setSelectedCountry] = useState('');
-    const [selectedCountryInformation, setSelectedCountryInformation] = useState<CountryInformationProps>(country_information_default);
     const [selectedProvince, setSelectedProvince] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
     const [weather, setWeather] = useState<CityWeatherProps>(weather_default);
@@ -64,7 +53,6 @@ export const WeatherAppController = ()=> {
     // Effects
     useEffect(()=> {fetchAllCountries()}, []);
     useEffect(()=> {
-        fetchCountryInformation();
         fetchStatesByCountries();
         setSelectedProvince('');
     }, [selectedCountry]);
@@ -72,10 +60,20 @@ export const WeatherAppController = ()=> {
         fetchCitiesByStates();
         setSelectedCity('');
     }, [selectedProvince]);
-    useEffect(()=> {fetchCityWeather()}, [selectedCity])
+    useEffect(()=> {fetchCityWeather()}, [selectedCity]);
+    useEffect(()=> {
+        if(selectedCity.length> 0) {
+            fetchCityWeather();
+        }
+    }, [metric]);
+    useEffect(()=> {
+        if(selectedCity.length=== 0) {
+            setWeather(weather_default);
+        }
+    }, [selectedCity])
 
     // State Handlers
-    const handleModeSelector = ()=> setDark(dark === false);
+    const handleModeSelector = ()=> setMetric(metric === false);
     const updateCountry = (value: string)=> setSelectedCountry(value);
     const updateProvince = (value: string)=> setSelectedProvince(value);
     const updateCity = (value: string)=> setSelectedCity(value);
@@ -103,32 +101,6 @@ export const WeatherAppController = ()=> {
         }catch(err) {
             console.log('[ERROR: API] Fetching all countries');
             console.log(err);
-        }
-    }
-    const fetchCountryInformation = ()=> {
-        if(selectedCountry.length> 0){
-            try{                
-                getCountryInformationServices(selectedCountry)
-                .subscribe({
-                    next: (response: any)=> {
-                        if(response) {
-                            setSelectedCountryInformation({
-                                name: response?.name || '',
-                                iso2: response?.iso2 || '',
-                                capital: response?.capital || '',
-                                currency: response?.currency || '',
-                            })
-                        }
-                    },
-                    error: (error: any)=> {
-                        console.log('[API retured ERROR] Fetching country specific information');
-                        console.log(error);
-                    },
-                })
-            }catch(error) {
-                console.log('[API:ERROR] fetching country related information');
-                console.log(error);
-            }
         }
     }
     const fetchStatesByCountries = ()=> {
@@ -188,7 +160,7 @@ export const WeatherAppController = ()=> {
     const fetchCityWeather = ()=> {
         if(selectedCity.length > 0) {
             try{
-                axios.get(` ${constants?.weather_baseurl}/weather?q=${selectedCity}&appid=${constants?.weather_api_key}&units=metric`)
+                axios.get(` ${constants?.weather_baseurl}/weather?q=${selectedCity}&appid=${constants?.weather_api_key}&units=${metric? 'metric': 'imperial'}`)
                 .then((response: any)=> {
                     if(
                         response &&
@@ -206,6 +178,7 @@ export const WeatherAppController = ()=> {
                             wind_degree: response?.data?.wind?.deg,
                             wind_gust: response?.data?.wind?.gust,
                             wind_speed: response?.data?.wind?.speed,
+                            weatherIcon: response?.data?.weather[0]?.icon || ''
                         })
                     }
                 })
@@ -231,13 +204,17 @@ export const WeatherAppController = ()=> {
                     position: 'absolute',
                     top: 0,
                     left: 0,
-                    backgroundImage: `url(${dark? night_sky: day_sky})` ,
+                    backgroundImage: `url(${weatherBG})` ,
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center center'
                 }}
             >
-                <BrandBar dark={dark} toggleHandler={handleModeSelector}/>
+                <BrandBar 
+                    metric={metric} 
+                    toggleHandler={handleModeSelector}
+                    weather={weather?.weatherIcon}
+                />
                 <Grid 
                     container spacing={2} 
                     sx={{ 
@@ -259,7 +236,7 @@ export const WeatherAppController = ()=> {
                             country = {selectedCountry}
                             province = {selectedProvince}
                             city = {selectedCity}
-                            countryInformation={selectedCountryInformation}
+                            cityWeatherIcon={weather?.weatherIcon || ''}
                             handleCountryChange = {updateCountry}
                             handleProvinceChange = {updateProvince}
                             handleCityChange = {updateCity}
@@ -268,7 +245,11 @@ export const WeatherAppController = ()=> {
                     <Grid item xs={12} md={6}>
                         {
                             selectedCity.length > 0 && (                            
-                                    <WeatherCard city={selectedCity} data={weather}/>                            
+                                    <WeatherCard 
+                                        city={selectedCity} 
+                                        data={weather}
+                                        metric={metric}
+                                    />                            
                             )
                         }    
                     </Grid>                

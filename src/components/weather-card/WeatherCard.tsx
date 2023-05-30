@@ -12,13 +12,16 @@ import ListItemText from '@mui/material/ListItemText';
 import { CityWeatherProps } from '../../types/types';
 interface WeatherCardProps {
     city: string;
-    data: CityWeatherProps
+    data: CityWeatherProps;
+    metric: boolean;
 }
 
 export const WeatherCard: React.FC<WeatherCardProps> = ({
     city,
     data,
+    metric,
 })=> {
+    
     // Renderer
     return(
         <React.Fragment>
@@ -38,104 +41,145 @@ export const WeatherCard: React.FC<WeatherCardProps> = ({
                 }}
             >
                     <List sx={{ width: '100%'}} >
-                        <ListItem dense divider>
-                            <ListItemText 
-                                primary="Weather Conditions" 
-                                secondary={`${data?.weather_tag} recorded`}
-                                primaryTypographyProps={{ style: {fontSize: '16px', fontWeight: 600, color: 'rgb(1 12 12)'} }}
-                                secondaryTypographyProps={{ style: {fontSize: '12px', color: 'rgb(19 36 74)'} }}
-                            />
-                        </ListItem>
+                        {
+                          data?.weather_tag.length> 0 && (
+                            <ListItem dense divider>
+                                <ListItemText 
+                                    primary="Weather Conditions" 
+                                    secondary={`${data?.weather_tag} recorded`}
+                                    secondaryTypographyProps={{ style: {fontSize: '18px', fontWeight: 600, color: '#353641'} }}
+                                    primaryTypographyProps={{ style: {fontSize: '14px', color: '#FFFFFF'} }}
+                                />
+                            </ListItem>
+                          )  
+                        }                        
                     </List>
                     <List sx={{ width: '100%'}} >
-                        <ListItem dense divider>
-                            <ListItemText 
-                                primary="Minimum Temperature" 
-                                secondary={`${data?.temperature_min} deg`}
-                                secondaryTypographyProps={{ style: {fontSize: '12px', color: 'rgb(19 36 74)'} }}
-                                primaryTypographyProps={{ style: {fontSize: '16px', fontWeight: 600, color: 'rgb(1 12 12)'} }}
-                            />
-                        </ListItem>
+                        {
+                            data?.temperature_min !== undefined && (
+                                <ListItem dense divider>
+                                    <ListItemText 
+                                        primary="Minimum Temperature" 
+                                        secondary={`${data?.temperature_min} deg ${metric? 'Celcius':'Farenheit' } `}
+                                        secondaryTypographyProps={{ style: {fontSize: '18px', fontWeight: 600, color: '#353641'} }}
+                                        primaryTypographyProps={{ style: {fontSize: '14px', color: '#FFFFFF'} }}
+                                    />
+                                </ListItem>
+                            )
+                        }                        
                     </List>
                     <List sx={{ width: '100%'}} >
-                        <ListItem dense divider>
-                            <ListItemText 
-                                primary="Actual Temperature" 
-                                secondary={`${data?.temperature_current} deg`}
-                                secondaryTypographyProps={{ style: {fontSize: '12px', color: 'rgb(19 36 74)'} }}
-                                primaryTypographyProps={{ style: {fontSize: '16px', fontWeight: 600, color: 'rgb(1 12 12)'} }}
-                            />
-                        </ListItem>
+                        {
+                            data?.temperature_current !== undefined && (
+                                <ListItem dense divider>
+                                    <ListItemText 
+                                        primary="Actual Temperature" 
+                                        secondary={`${data?.temperature_current} deg ${metric? 'Celcius':'Farenheit' }`}
+                                        secondaryTypographyProps={{ style: {fontSize: '18px', fontWeight: 600, color: '#353641'} }}
+                                        primaryTypographyProps={{ style: {fontSize: '14px', color: '#FFFFFF'} }}
+                                    />
+                                </ListItem>
+                            )
+                        }                        
                     </List>
                     <List sx={{ width: '100%'}} >
-                        <ListItem dense divider>
-                            <ListItemText 
-                                primary="Maximum Temperature" 
-                                secondary={`${data?.temperature_max} deg`}
-                                secondaryTypographyProps={{ style: {fontSize: '12px', color: 'rgb(19 36 74)'} }}
-                                primaryTypographyProps={{ style: {fontSize: '16px', fontWeight: 600, color: 'rgb(1 12 12)'} }}
-                            />
-                        </ListItem>
+                        {
+                            data?.temperature_max !== undefined && (
+                                <ListItem dense divider>
+                                    <ListItemText 
+                                        primary="Maximum Temperature" 
+                                        secondary={`${data?.temperature_max} deg ${metric? 'Celcius':'Farenheit' }`}
+                                        secondaryTypographyProps={{ style: {fontSize: '18px', fontWeight: 600, color: '#353641'} }}
+                                        primaryTypographyProps={{ style: {fontSize: '14px', color: '#FFFFFF'} }}
+                                    />
+                                </ListItem>
+                            )
+                        }                        
                     </List>
                     <List sx={{ width: '100%'}} >
-                        <ListItem dense divider>
-                            <ListItemText 
-                                primary="Temperature(feels like)" 
-                                secondary={`${data?.temperature_feels_like} deg`}
-                                secondaryTypographyProps={{ style: {fontSize: '12px', color: 'rgb(19 36 74)'} }}
-                                primaryTypographyProps={{ style: {fontSize: '16px', fontWeight: 600, color: 'rgb(1 12 12)'} }}
-                            />
-                        </ListItem>
+                        {
+                            data?.temperature_feels_like !== undefined && (
+                                <ListItem dense divider>
+                                    <ListItemText 
+                                        primary="Temperature(feels like)" 
+                                        secondary={`${data?.temperature_feels_like} deg ${metric? 'Celcius':'Farenheit' }`}
+                                        secondaryTypographyProps={{ style: {fontSize: '18px', fontWeight: 600, color: '#353641'} }}
+                                        primaryTypographyProps={{ style: {fontSize: '14px', color: '#FFFFFF'} }}
+                                    />
+                                </ListItem>
+                            )
+                        }                        
                     </List>
                     <List sx={{ width: '100%'}} >
-                        <ListItem dense divider>
-                            <ListItemText 
-                                primary="Humidity" 
-                                secondary={`${data?.humidity} gm`}
-                                secondaryTypographyProps={{ style: {fontSize: '12px', color: 'rgb(19 36 74)'} }}
-                                primaryTypographyProps={{ style: {fontSize: '16px', fontWeight: 600, color: 'rgb(1 12 12)'} }}
-                            />
-                        </ListItem>
+                        {
+                            data?.humidity !== undefined && (
+                                <ListItem dense divider>
+                                    <ListItemText 
+                                        primary="Humidity" 
+                                        secondary={`${data?.humidity} gm`}
+                                        secondaryTypographyProps={{ style: {fontSize: '18px', fontWeight: 600, color: '#353641'} }}
+                                        primaryTypographyProps={{ style: {fontSize: '14px', color: '#FFFFFF'} }}
+                                    />
+                                </ListItem>
+                            )
+                        }                        
                     </List>
                     <List sx={{ width: '100%'}} >
-                        <ListItem dense divider>
-                            <ListItemText 
-                                primary="Pressure" 
-                                secondary={`${data?.pressure} psi`}
-                                secondaryTypographyProps={{ style: {fontSize: '12px', color: 'rgb(19 36 74)'} }}
-                                primaryTypographyProps={{ style: {fontSize: '16px', fontWeight: 600, color: 'rgb(1 12 12)'} }}
-                            />
-                        </ListItem>
+                        {
+                            data?.pressure !== undefined && (
+                                <ListItem dense divider>
+                                    <ListItemText 
+                                        primary="Pressure" 
+                                        secondary={`${data?.pressure} psi`}
+                                        secondaryTypographyProps={{ style: {fontSize: '18px', fontWeight: 600, color: '#353641'} }}
+                                        primaryTypographyProps={{ style: {fontSize: '14px', color: '#FFFFFF'} }}
+                                    />
+                                </ListItem>
+                            )
+                        }                        
                     </List>
                     <List sx={{ width: '100%'}} >
-                        <ListItem dense divider>
-                            <ListItemText 
-                                primary="Wind Degree" 
-                                secondary={`${data?.wind_degree} deg`}
-                                secondaryTypographyProps={{ style: {fontSize: '12px', color: 'rgb(19 36 74)'} }}
-                                primaryTypographyProps={{ style: {fontSize: '16px', fontWeight: 600, color: 'rgb(1 12 12)'} }}
-                            />
-                        </ListItem>
+                        {
+                            data?.wind_degree !== undefined && (
+                                <ListItem dense divider>
+                                    <ListItemText 
+                                        primary="Wind Degree" 
+                                        secondary={`${data?.wind_degree} deg`}
+                                        secondaryTypographyProps={{ style: {fontSize: '18px', fontWeight: 600, color: '#353641'} }}
+                                        primaryTypographyProps={{ style: {fontSize: '14px', color: '#FFFFFF'} }}
+                                    />
+                                </ListItem>
+                            )
+                        }                        
                     </List>
                     <List sx={{ width: '100%'}} >
-                        <ListItem dense divider>
-                            <ListItemText 
-                                primary="Wind Speed" 
-                                secondary={`${data?.wind_speed} Kt`}
-                                secondaryTypographyProps={{ style: {fontSize: '12px', color: 'rgb(19 36 74)'} }}
-                                primaryTypographyProps={{ style: {fontSize: '16px', fontWeight: 600, color: 'rgb(1 12 12)'} }}
-                            />
-                        </ListItem>
+                        {
+                            data?.wind_speed !== undefined && (
+                                <ListItem dense divider>
+                                    <ListItemText 
+                                        primary="Wind Speed" 
+                                        secondary={`${data?.wind_speed} ${metric? 'Kmph': 'Kt'}`}
+                                        secondaryTypographyProps={{ style: {fontSize: '18px', fontWeight: 600, color: '#353641'} }}
+                                        primaryTypographyProps={{ style: {fontSize: '14px', color: '#FFFFFF'} }}
+                                    />
+                                </ListItem>
+                            )
+                        }                        
                     </List>
                     <List sx={{ width: '100%'}} >
-                        <ListItem dense divider>
-                            <ListItemText 
-                                primary="Wind Gust Speed" 
-                                secondary={`${data?.wind_gust} Kt`}
-                                secondaryTypographyProps={{ style: {fontSize: '12px', color: 'rgb(19 36 74)'} }}
-                                primaryTypographyProps={{ style: {fontSize: '16px', fontWeight: 600, color: 'rgb(1 12 12)'} }}
-                            />
-                        </ListItem>
+                        {
+                            data?.wind_gust !== undefined && (
+                                <ListItem dense divider>
+                                    <ListItemText 
+                                        primary="Wind Gust Speed" 
+                                        secondary={`${data?.wind_gust} Kt`}
+                                        secondaryTypographyProps={{ style: {fontSize: '18px', fontWeight: 600, color: '#353641'} }}
+                                        primaryTypographyProps={{ style: {fontSize: '14px', color: '#FFFFFF'} }}
+                                    />
+                                </ListItem>
+                            )
+                        }
+                        
                     </List>
             </Paper>
         </React.Fragment>

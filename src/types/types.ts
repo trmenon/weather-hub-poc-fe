@@ -15,11 +15,5 @@ export interface CityWeatherProps {
     wind_degree: number;
     wind_gust: number;
     wind_speed: number;
-}
-
-export interface CountryInformationProps {
-    name: string;
-    iso2: string;
-    capital: string;
-    currency: string;
+    weatherIcon: string;
 }
